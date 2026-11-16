@@ -38,6 +38,9 @@ SECRET_KEY_PATH = os.path.join(BASE_DIR, "data", "secret_key.txt")
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # uploads up to 5 MB
+# The login cookie cannot be read by JavaScript and is not sent from other websites
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 
 def load_secret_key():

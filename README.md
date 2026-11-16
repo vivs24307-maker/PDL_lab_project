@@ -138,7 +138,39 @@ A yellow banner reminds you to **change this password** (top right → *Change p
 ### Using it from other computers in the college
 `app.py` listens on all network addresses. Find the IP address of the computer running it (`ipconfig` on Windows, `ip addr` on Linux) and open `http://<that-ip>:5000` from any computer on the same network. Allow Python through the firewall if Windows asks.
 
-> The built-in Flask server is fine for a department-level tool on the college network. It should **not** be exposed to the public internet.
+> The built-in Flask server (`python app.py`) is fine on the college network, but should **not** be opened to the public internet. To put Chronos online, use a proper host as described next.
+
+### Putting it online (PythonAnywhere, free)
+
+[PythonAnywhere](https://www.pythonanywhere.com) runs Flask apps for free and keeps the SQLite database file safe between restarts. The app will be at `https://<your-username>.pythonanywhere.com`. Replace `<your-username>` below with your PythonAnywhere username.
+
+1. Create a free **Beginner** account on pythonanywhere.com.
+2. Open **Consoles → Bash** and run:
+   ```bash
+   git clone https://github.com/vivs24307-maker/PDL_lab_project.git
+   cd PDL_lab_project
+   pip3.10 install --user -r requirements.txt
+   python3.10 model/train.py
+   ```
+   (Training once here means the first web visit does not have to wait for it.)
+3. Open the **Web** tab → **Add a new web app** → **Manual configuration** → **Python 3.10**.
+4. On the Web tab:
+   - **Source code:** `/home/<your-username>/PDL_lab_project`
+   - **WSGI configuration file:** click the link, delete everything in it and paste:
+     ```python
+     import sys
+     sys.path.insert(0, "/home/<your-username>/PDL_lab_project")
+     from wsgi import application
+     ```
+     then **Save**.
+   - **Static files:** URL `/static/`, directory `/home/<your-username>/PDL_lab_project/static`
+   - **Force HTTPS:** turn it on.
+5. Click the green **Reload** button and open your link.
+6. **Log in straight away** (`admin` / `admin123`) and **change the password**. The site is now on the public internet.
+
+**Updating later:** in a Bash console run `cd PDL_lab_project && git pull`, then press **Reload** on the Web tab.
+
+**Good to know:** free web apps must be renewed every 3 months (a "Run until 3 months from today" button on the Web tab; PythonAnywhere emails a reminder). The database lives in `PDL_lab_project/data/` and is not touched by `git pull`. Download a backup from **Settings** now and then.
 
 ---
 
@@ -172,6 +204,7 @@ Faculty list: `name, department, designation` (+ optional `max_hours`). Designat
 ```
 PDL_lab_project/
 ├── app.py                      Flask web app: pages, login, JSON API
+├── wsgi.py                     entry point for web hosts such as PythonAnywhere
 ├── demo_cli.py                 terminal demo; can also check your own CSV/Excel file
 ├── requirements.txt
 ├── core/
