@@ -149,11 +149,12 @@ A yellow banner reminds you to **change this password** (top right → *Change p
    ```bash
    git clone https://github.com/vivs24307-maker/PDL_lab_project.git
    cd PDL_lab_project
-   pip3.10 install --user -r requirements.txt
-   python3.10 model/train.py
+   python3 --version
+   python3 -m pip install --user -r requirements.txt
+   python3 model/train.py
    ```
-   (Training once here means the first web visit does not have to wait for it.)
-3. Open the **Web** tab → **Add a new web app** → **Manual configuration** → **Python 3.10**.
+   Note the version that `python3 --version` prints (for example 3.13). Training once here means the first web visit does not have to wait for it.
+3. Open the **Web** tab → **Add a new web app** → **Manual configuration** → the **same Python version** that `python3 --version` printed.
 4. On the Web tab:
    - **Source code:** `/home/<your-username>/PDL_lab_project`
    - **WSGI configuration file:** click the link, delete everything in it and paste:
